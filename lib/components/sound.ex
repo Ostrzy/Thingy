@@ -4,4 +4,8 @@ defmodule Component.Sound do
   def start_link(sound) do
     Component.start_link(%{sound: sound})
   end
+
+  def get(entity) do
+    Entity.get_state(entity, __MODULE__).sound
+  end
 end

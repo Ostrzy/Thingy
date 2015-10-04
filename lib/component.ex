@@ -14,4 +14,8 @@ defmodule Component do
   def set_state(component, state) do
     Agent.update(component, fn _ -> state end)
   end
+
+  def update_state(component, function) do
+    Agent.update(component, function)
+  end
 end
