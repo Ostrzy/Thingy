@@ -8,8 +8,13 @@ defmodule World do
     {:ok, dragon} = Entity.init
     Entity.add_component(dragon, Component.Health, 3)
     Entity.add_component(dragon, Component.Hunger, 3)
+    Entity.add_component(dragon, Component.Sound, "Roar")
 
-    Task.start_link(fn -> loop(%{entities: [dragon]}) end)
+    {:ok, cat} = Entity.init
+    Entity.add_component(cat, Component.Health, 1)
+    Entity.add_component(cat, Component.Sound, "Meow")
+
+    Task.start_link(fn -> loop(%{entities: [dragon, cat]}) end)
   end
 
   defp loop(state) do
