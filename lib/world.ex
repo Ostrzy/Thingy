@@ -1,6 +1,7 @@
 defmodule World do
   @systems [
     System.Hunger,
+    System.Starvation,
     System.Roar
   ]
 
