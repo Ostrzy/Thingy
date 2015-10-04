@@ -19,10 +19,10 @@ defmodule World do
   end
 
   defp loop(state) do
-    #Jak znasz jakiś sprytny trik na capture tego run, żeby nie trzeba było lambdy robić,
-    #to się podziel
-    entities = Enum.reduce @systems, state.entities, fn (system, entities) -> system.run(entities) end
+    entities = Enum.reduce @systems, state.entities, fn (system, entities) ->
+      system.run(entities)
+    end
     :timer.sleep(100)
-    loop( %{state | entities: entities} )
+    loop(%{state | entities: entities})
   end
 end
