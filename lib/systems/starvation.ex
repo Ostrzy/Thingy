@@ -2,11 +2,12 @@ defmodule System.Starvation do
   @behaviour GameSystem
 
   def run(entities) do
-    entities = Enum.filter entities, fn entity ->
+    applicable_entities = Enum.filter entities, fn entity ->
       Entity.contains?(entity, [Component.Hunger, Component.Health])
     end
 
-    Enum.each(entities, &starvation/1)
+    Enum.each(applicable_entities, &starvation/1)
+    entities
   end
 
   defp starvation(entity) do

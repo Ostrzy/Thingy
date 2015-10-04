@@ -1,5 +1,5 @@
 defmodule GameSystem do
   use Behaviour
 
-  defcallback run([pid]) :: any
+  defcallback run([pid]) :: [pid]
 end

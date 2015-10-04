@@ -2,11 +2,13 @@ defmodule System.Hunger do
   @behaviour GameSystem
 
   def run(entities) do
-    entities = Enum.filter entities, fn entity ->
+    applicable_entities = Enum.filter entities, fn entity ->
       Entity.contains?(entity, Component.Hunger)
     end
 
-    Enum.each entities, &hunger/1
+    Enum.each applicable_entities, &hunger/1
+
+    entities
   end
 
   defp hunger(entity) do
