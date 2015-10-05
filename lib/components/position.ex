@@ -1,20 +1,20 @@
 defmodule Component.Position do
-  @behaviour Component
+  use Component
 
   def start_link({x, y}) do
     Component.start_link(%{x: x, y: y})
   end
 
   def get(entity) do
-    state = Entity.get_state(entity, __MODULE__)
+    state = state(entity)
     {state.x, state.y}
   end
 
   def move_to(entity, x, y) do
-    Entity.update_state(entity, __MODULE__, fn _ -> %{x: x, y: y} end)
+    update(entity, fn _ -> %{x: x, y: y} end)
   end
 
   def move_by(entity, dx, dy) do
-    Entity.update_state(entity, __MODULE__, fn %{x: x, y: y} -> %{x: x + dx, y: y + dy} end)
+    update(entity, fn %{x: x, y: y} -> %{x: x + dx, y: y + dy} end)
   end
 end

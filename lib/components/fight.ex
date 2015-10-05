@@ -1,5 +1,5 @@
 defmodule Component.Fight do
-  @behaviour Component
+  use Component
 
   def start_link({range, damage}) do
     Component.start_link(%{
@@ -11,18 +11,18 @@ defmodule Component.Fight do
   end
 
   def get_damage(entity) do
-    Entity.get_state(entity, __MODULE__).damage
+    state(entity).damage
   end
 
   def get_base_damage(entity) do
-    Entity.get_state(entity, __MODULE__).base_damage
+    state(entity).base_damage
   end
 
   def get_range(entity) do
-    Entity.get_state(entity, __MODULE__).range
+    state(entity).range
   end
 
   def get_base_range(entity) do
-    Entity.get_state(entity, __MODULE__).base_range
+    state(entity).base_range
   end
 end

@@ -1,11 +1,11 @@
 defmodule Component.Sound do
-  @behaviour Component
+  use Component
 
   def start_link(sound) do
     Component.start_link(%{sound: sound})
   end
 
   def get(entity) do
-    Entity.get_state(entity, __MODULE__).sound
+    state(entity).sound
   end
 end

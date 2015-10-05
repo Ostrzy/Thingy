@@ -1,20 +1,20 @@
 defmodule Component.Hunger do
-  @behaviour Component
+  use Component
 
   def start_link(max_hunger) do
     Component.start_link(%{hunger: max_hunger, max_hunger: max_hunger})
   end
 
   def get(entity) do
-    Entity.get_state(entity, __MODULE__).hunger
+    state(entity).hunger
   end
 
   def get_max(entity) do
-    Entity.get_state(entity, __MODULE__).max_hunger
+    state(entity).max_hunger
   end
 
   def eat(entity, amount) do
-    Entity.update_state entity, __MODULE__, fn state ->
+    update entity, fn state ->
       hunger = Enum.min([state.hunger + amount, state.max_hunger])
       %{state | hunger: hunger}
     end
@@ -22,7 +22,7 @@ defmodule Component.Hunger do
 
   # No idea for better function name - any suggestions?
   def famish(entity, amount) do
-    Entity.update_state entity, __MODULE__, fn state ->
+    update entity, fn state ->
       hunger = Enum.max([state.hunger - amount, -state.max_hunger])
       %{state | hunger: hunger}
     end

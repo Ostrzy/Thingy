@@ -36,7 +36,7 @@ defmodule Entity do
   defp get_for_component(entity, component_name, function_name, args \\ []) do
     Agent.get entity, fn components ->
       component = HashDict.get(components, component_name)
-      apply(Component, function_name, [component | args])
+      apply(Component.Helpers, function_name, [component | args])
     end
   end
 end

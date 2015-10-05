@@ -1,16 +1,16 @@
 defmodule Component.Health do
-  @behaviour Component
+  use Component
 
   def start_link(max_hp) do
     Component.start_link(%{hp: max_hp, max_hp: max_hp})
   end
 
   def get(entity) do
-    Entity.get_state(entity, __MODULE__).hp
+    state(entity).hp
   end
 
   def get_max(entity) do
-    Entity.get_state(entity, __MODULE__).max_hp
+    state(entity).max_hp
   end
 
   def alive?(entity) do
@@ -18,14 +18,14 @@ defmodule Component.Health do
   end
 
   def heal(entity, amount) do
-    Entity.update_state entity, __MODULE__, fn state ->
+    update entity, fn state ->
       hp = Enum.min([state.hp + amount, state.max_hp])
       %{state | hp: hp}
     end
   end
 
   def damage(entity, amount) do
-    Entity.update_state entity, __MODULE__, fn state ->
+    update entity, fn state ->
       hp = Enum.max([state.hp - amount, 0])
       %{state | hp: hp}
     end
