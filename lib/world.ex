@@ -2,7 +2,8 @@ defmodule World do
   @systems [
     System.Hunger,
     System.Starvation,
-    System.Roar
+    System.Roar,
+    System.Death
   ]
 
   def start_link do
