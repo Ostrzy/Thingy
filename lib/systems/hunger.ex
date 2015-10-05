@@ -3,8 +3,8 @@ defmodule System.Hunger do
 
   def run(entities) do
     entities
-    |> Enum.filter(fn entity -> Entity.contains?(entity, Component.Hunger) end)
-    |> Enum.each(fn entity -> Component.Hunger.famish(entity, 1) end)
+    |> Enum.filter(&Entity.contains? &1, Component.Hunger)
+    |> Enum.each(&Component.Hunger.famish &1, 1)
 
     entities
   end

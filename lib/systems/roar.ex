@@ -3,8 +3,8 @@ defmodule System.Roar do
 
   def run(entities) do
     entities
-    |> Enum.filter(fn entity -> Entity.contains?(entity, [Component.Sound]) end)
-    |> Enum.each(fn entity -> IO.puts Component.Sound.get(entity) end)
+    |> Enum.filter(&Entity.contains? &1, Component.Sound)
+    |> Enum.each(&IO.puts Component.Sound.get(&1))
 
     entities
   end

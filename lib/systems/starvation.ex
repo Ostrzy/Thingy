@@ -3,9 +3,9 @@ defmodule System.Starvation do
 
   def run(entities) do
     entities
-    |> Enum.filter(fn entity -> Entity.contains?(entity, [Component.Hunger, Component.Health]) end)
-    |> Enum.filter(fn entity -> Component.Hunger.hungry?(entity) end)
-    |> Enum.each(fn entity -> Component.Health.damage(entity, 1) end)
+    |> Enum.filter(&Entity.contains? &1, [Component.Hunger, Component.Health])
+    |> Enum.filter(&Component.Hunger.hungry? &1)
+    |> Enum.each(&Component.Health.damage &1, 1)
 
     entities
   end
