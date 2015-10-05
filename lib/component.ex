@@ -1,11 +1,9 @@
 defmodule Component do
-  def start_link(state) do
-    Agent.start_link(fn -> state end)
-  end
-
   defmacro __using__(_opts) do
     quote do
-      @behaviour Component.Behaviour
+      def start_link(state) do
+        Agent.start_link(fn -> state end)
+      end
 
       def state(entity) do
         Entity.get_state(entity, __MODULE__)
@@ -18,13 +16,9 @@ defmodule Component do
       def update(entity, updater) do
         Entity.update_state(entity, __MODULE__, updater)
       end
+
+      defoverridable [start_link: 1]
     end
-  end
-
-  defmodule Behaviour do
-    use Elixir.Behaviour
-
-    defcallback start_link(term) :: Agent.on_start
   end
 
   defmodule Helpers do

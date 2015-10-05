@@ -2,7 +2,7 @@ defmodule Component.Fight do
   use Component
 
   def start_link({range, damage}) do
-    Component.start_link(%{
+    super(%{
       base_range: range,
       range: range,
       base_damage: damage,

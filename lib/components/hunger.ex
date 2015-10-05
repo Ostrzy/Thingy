@@ -2,7 +2,7 @@ defmodule Component.Hunger do
   use Component
 
   def start_link(max_hunger) do
-    Component.start_link(%{hunger: max_hunger, max_hunger: max_hunger})
+    super(%{hunger: max_hunger, max_hunger: max_hunger})
   end
 
   def get(entity) do

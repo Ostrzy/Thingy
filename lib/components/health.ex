@@ -2,7 +2,7 @@ defmodule Component.Health do
   use Component
 
   def start_link(max_hp) do
-    Component.start_link(%{hp: max_hp, max_hp: max_hp})
+    super(%{hp: max_hp, max_hp: max_hp})
   end
 
   def get(entity) do

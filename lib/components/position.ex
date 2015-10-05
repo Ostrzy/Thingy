@@ -2,7 +2,7 @@ defmodule Component.Position do
   use Component
 
   def start_link({x, y}) do
-    Component.start_link(%{x: x, y: y})
+    super(%{x: x, y: y})
   end
 
   def get(entity) do
