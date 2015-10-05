@@ -4,7 +4,7 @@ defmodule System.Roar do
   def run(entities) do
     entities
     |> Enum.filter(fn entity -> Entity.contains?(entity, [Component.Sound]) end)
-    |> Enum.each(fn entity -> IO.puts Entity.get_state(entity, Component.Sound).sound end)
+    |> Enum.each(fn entity -> IO.puts Component.Sound.get(entity) end)
 
     entities
   end

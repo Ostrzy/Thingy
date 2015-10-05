@@ -4,7 +4,7 @@ defmodule System.Death do
   def run(entities) do
     dead_entities = Enum.filter entities, fn entity ->
       Entity.contains?(entity, Component.Health)
-      and Entity.get_state(entity, Component.Health).hp == 0
+      and not Component.Health.alive?(entity)
     end
 
     Enum.each dead_entities, &Agent.stop/1
