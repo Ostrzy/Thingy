@@ -1,11 +1,11 @@
 defmodule Component.Position do
   @behaviour Component
 
-  def start_link(%{x: x, y: y}) do
+  def start_link({x, y}) do
     Component.start_link(%{x: x, y: y})
   end
 
-  def get_position(entity) do
+  def get(entity) do
     state = Entity.get_state(entity, __MODULE__)
     {state.x, state.y}
   end
