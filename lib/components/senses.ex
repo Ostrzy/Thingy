@@ -2,8 +2,8 @@ defmodule Component.Senses do
   use Component
 
   # Currently sense map is simple HashSet of entities
-  def start_link(%HashSet{} = entities) do
-    super(entities)
+  def start_link do
+    start_link(HashSet.new)
   end
 
   def get(entity) do

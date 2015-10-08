@@ -12,7 +12,7 @@ defmodule World do
     Entity.add_component(dragon, Component.Health, 3)
     Entity.add_component(dragon, Component.Hunger, 3)
     Entity.add_component(dragon, Component.Sound, "Roar")
-    Entity.add_component(dragon, Component.Senses, HashSet.new)
+    Entity.add_component(dragon, Component.Senses)
     Entity.add_component(dragon, Component.Sense.Eyesight, 4)
     Entity.add_component(dragon, Component.Position, {0, 0})
 

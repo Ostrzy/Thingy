@@ -10,6 +10,13 @@ defmodule Entity do
     end
   end
 
+  def add_component(entity, component_name) do
+    Agent.update entity, fn components ->
+      {:ok, component} = component_name.start_link
+      HashDict.put(components, component_name, component)
+    end
+  end
+
   def get_state(entity, component_name) do
     get_for_component(entity, component_name, :get_state)
   end
