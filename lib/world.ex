@@ -5,6 +5,7 @@ defmodule World do
     System.Roar,
     System.Death,
     System.Senses,
+    System.AI
   ]
 
   def start_link do
@@ -15,6 +16,8 @@ defmodule World do
     Entity.add_component(dragon, Component.Senses)
     Entity.add_component(dragon, Component.Sense.Eyesight, 4)
     Entity.add_component(dragon, Component.Position, {0, 0})
+    Entity.add_component(dragon, Component.AI)
+    Entity.add_component(dragon, Component.AI.Hunger)
 
     {:ok, cat} = Entity.init
     Entity.add_component(cat, Component.Health, 1)

@@ -1,4 +1,6 @@
 defmodule Entity do
+  @type t :: pid
+
   def init do
     Agent.start_link(fn -> HashDict.new end)
   end

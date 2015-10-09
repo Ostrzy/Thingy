@@ -31,4 +31,8 @@ defmodule Component.Hunger do
   def hungry?(entity) do
     get(entity) < 0
   end
+
+  def normalized(entity) do
+    get(entity) / get_max(entity)
+  end
 end
