@@ -19,6 +19,14 @@ defmodule Entity do
     end
   end
 
+  def remove_component(entity, component_name) do
+    Agent.update entity, fn components ->
+      {component, updated_components} = HashDict.pop(components, component_name)
+      Agent.stop component
+      updated_components
+    end
+  end
+
   def get_state(entity, component_name) do
     get_for_component(entity, component_name, :get_state)
   end
