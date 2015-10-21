@@ -50,6 +50,10 @@ defmodule Entity do
     end
   end
 
+  def filter(entities, component_names) do
+    entities |> Enum.filter(&contains?(&1, component_names))
+  end
+
   defp get_for_component(entity, component_name, function_name, args \\ []) do
     Agent.get entity, fn components ->
       component = HashDict.get(components, component_name)

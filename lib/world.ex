@@ -6,7 +6,14 @@ defmodule World do
     System.Roar,
     System.Death,
     System.Senses,
-    System.AI
+
+    System.AI.PreEvaluations,
+    # AI evaluation systems
+    System.AI.Hunger.Evaluator,
+
+    System.AI.Choice,
+    # AI execution systems
+    System.AI.Hunger.Executor,
   ]
 
   def start_link do
