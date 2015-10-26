@@ -7,7 +7,7 @@ defmodule World do
     System.Death,
     System.Senses,
 
-    System.AI.PreEvaluations,
+    System.AI.PreEvaluation,
     # AI evaluation systems
     System.AI.Hunger.Evaluator,
 

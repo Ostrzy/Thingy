@@ -12,7 +12,7 @@ defmodule System.AI.Hunger.Executor do
 
   def run(entities) do
     entities
-    |> Enum.filter(@components)
+    |> Entity.filter(@components)
     |> Enum.filter(&Component.AI.chosen?(&1, __MODULE__))
     |> Enum.each(&set_action(&1))
 

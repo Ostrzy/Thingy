@@ -34,14 +34,14 @@ defmodule Component.AI do
 
   def set_blackboard(entity, ai, bstate) do
     update entity, fn state ->
-      blackboard = state(entity).blackboard |> HashDict.put(ai, bstate)
+      blackboard = state.blackboard |> HashDict.put(ai, bstate)
       %{state | blackboard: blackboard}
     end
   end
 
   def submit_evaluation(entity, ai, {_severity, _ease} = evaluation) do
     update entity, fn state ->
-      evaluations = state(entity).evaluations |> HashDict.put(ai, evaluation)
+      evaluations = state.evaluations |> HashDict.put(ai, evaluation)
       %{state | evaluations: evaluations}
     end
   end

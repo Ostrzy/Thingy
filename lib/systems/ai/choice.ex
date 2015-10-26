@@ -4,7 +4,7 @@ defmodule System.AI.Choice do
   def run(entities) do
     entities
     |> Entity.filter(Component.AI)
-    |> Entity.each(&choose_ai(&1))
+    |> Enum.each(&choose_ai(&1))
 
     entities
   end

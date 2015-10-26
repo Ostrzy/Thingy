@@ -35,7 +35,7 @@ defmodule System.AI.Hunger.Evaluator do
     # Filter things that can be eaten after killed
     targets = Component.Senses.get(entity) |> Enum.filter(fn e -> e != entity end)
     # Fetch directly eatable entities
-    state = %{targets: targets}
+    state = %{targets: targets, food: []}
     Component.AI.set_blackboard(entity, __MODULE__, state)
     state
   end
