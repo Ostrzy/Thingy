@@ -19,7 +19,7 @@ defmodule Component.AI do
   end
 
   def blackboard(entity, ai) do
-    state(entity).blackboard |> HashDict.fetch(ai)
+    state(entity).blackboard |> HashDict.fetch!(ai)
   end
 
   def evaluations(entity) do

@@ -7,6 +7,8 @@ defmodule System.AI.PreEvaluation do
     |> clear_blackboards
     |> clear_choice
     |> clear_evaluations
+
+    entities
   end
 
   defp clear_choice(entities) do

@@ -1,6 +1,5 @@
 defmodule World do
   @systems [
-    System.Movement,
     System.Hunger,
     System.Starvation,
     System.Roar,
@@ -27,12 +26,11 @@ defmodule World do
     Entity.add_component(dragon, Component.AI.Hunger)
     Entity.add_component(dragon, Component.Position, {0, 0})
     Entity.add_component(dragon, Component.Movement, {5, :true})
-    Entity.add_component(dragon, Component.MoveOrder, {99, 99})
 
     {:ok, cat} = Entity.init
     Entity.add_component(cat, Component.Health, 1)
     Entity.add_component(cat, Component.Sound, "Meow")
-    Entity.add_component(cat, Component.Position, {100, 100})
+    Entity.add_component(cat, Component.Position, {1, 1})
 
     Task.start_link(fn -> loop(%{entities: [dragon, cat]}) end)
   end

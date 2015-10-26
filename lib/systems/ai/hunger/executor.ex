@@ -13,7 +13,7 @@ defmodule System.AI.Hunger.Executor do
   def run(entities) do
     entities
     |> Entity.filter(@components)
-    |> Enum.filter(&Component.AI.chosen?(&1, __MODULE__))
+    |> Enum.filter(&Component.AI.chosen?(&1, System.AI.Hunger))
     |> Enum.each(&set_action(&1))
 
     entities
@@ -21,7 +21,7 @@ defmodule System.AI.Hunger.Executor do
 
   defp set_action(entity) do
     alias Component.Position
-    Component.AI.blackboard(entity, __MODULE__).targets
+    Component.AI.blackboard(entity, System.AI.Hunger).targets
     |> Enum.min_by(fn target -> distance(Position.get(entity), Position.get(target)) end)
     |> go_to(entity)
   end
@@ -31,16 +31,26 @@ defmodule System.AI.Hunger.Executor do
   end
 
   defp go_to(target, entity) do
-    {x1, y1} = Component.Position.get(entity)
-    {x2, y2} = Component.Position.get(target)
-    case {x1 - x2, y1 - y2} do
-      {0, 0}               -> :none
-      {0, dy} when dy > 0 -> :down
-      {0, dy} when dy < 0 -> :up
-      {dx, _} when dx > 0 -> :left
-      {dx, _} when dx < 0 -> :right
+    {px, py} = Component.Position.get(entity)
+    {tx, ty} = Component.Position.get(target)
+    range = Component.Movement.get_range entity
+
+    dx = abs tx - px
+    dy = abs ty - py
+    d = dx + dy
+    dirx = if dx != 0, do: (tx - px) / dx, else: 0
+    diry = if dx != 0, do: (ty - py) / dy, else: 0
+
+    if d <= range do
+      Component.Position.move_to entity, tx, ty
+    else
+      mx = round dx / d * range
+      my = range - mx
+      Component.Position.move_by entity, dirx * mx, diry * my
     end
-    # Here use the direction in some way
+
+    {x1, y1} = Component.Position.get entity
+    IO.puts(to_string(x1) <> " " <> to_string(y1))
   end
 
 end

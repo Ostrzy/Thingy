@@ -11,7 +11,7 @@ defmodule System.AI.Hunger.Evaluator do
   def run(entities) do
     entities
     |> Entity.filter(@components)
-    |> Enum.each(&Component.AI.submit_evaluation(&1, __MODULE__, evaluate(&1)))
+    |> Enum.each(&Component.AI.submit_evaluation(&1, System.AI.Hunger, evaluate(&1)))
 
     entities
   end
@@ -36,7 +36,7 @@ defmodule System.AI.Hunger.Evaluator do
     targets = Component.Senses.get(entity) |> Enum.filter(fn e -> e != entity end)
     # Fetch directly eatable entities
     state = %{targets: targets, food: []}
-    Component.AI.set_blackboard(entity, __MODULE__, state)
+    Component.AI.set_blackboard(entity, System.AI.Hunger, state)
     state
   end
 
