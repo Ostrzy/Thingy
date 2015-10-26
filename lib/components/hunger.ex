@@ -1,8 +1,8 @@
 defmodule Component.Hunger do
   use Component
 
-  def start_link(max_hunger) do
-    super(%{hunger: max_hunger, max_hunger: max_hunger})
+  def start_link({type, max_hunger}) do
+    super(%{hunger: max_hunger, max_hunger: max_hunger, type: type})
   end
 
   def get(entity) do
@@ -11,6 +11,10 @@ defmodule Component.Hunger do
 
   def get_max(entity) do
     state(entity).max_hunger
+  end
+
+  def eat?(entity, type) do
+    state(entity).type == type
   end
 
   def eat(entity, amount) do

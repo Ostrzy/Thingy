@@ -1,4 +1,4 @@
-defmodule System.AI.PreEvaluation do
+defmodule System.AI.PreEvaluations do
   @behaviour GameSystem
 
   def run(entities) do

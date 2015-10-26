@@ -5,8 +5,9 @@ defmodule World do
     System.Roar,
     System.Death,
     System.Senses,
+    System.FoodSpawner,
 
-    System.AI.PreEvaluation,
+    System.AI.PreEvaluations,
     # AI evaluation systems
     System.AI.Hunger.Evaluator,
 
@@ -16,9 +17,12 @@ defmodule World do
   ]
 
   def start_link do
+    << a :: 32, b :: 32, c :: 32 >> = :crypto.rand_bytes(12)
+    :random.seed(a, b, c)
+
     {:ok, dragon} = Entity.init
     Entity.add_component(dragon, Component.Health, 3)
-    Entity.add_component(dragon, Component.Hunger, 40)
+    Entity.add_component(dragon, Component.Hunger, {:meat, 40})
     Entity.add_component(dragon, Component.Sound, "Roar")
     Entity.add_component(dragon, Component.Senses)
     Entity.add_component(dragon, Component.Sense.Eyesight, 4)
@@ -27,12 +31,7 @@ defmodule World do
     Entity.add_component(dragon, Component.Position, {0, 0})
     Entity.add_component(dragon, Component.Movement, {5, :true})
 
-    {:ok, cat} = Entity.init
-    Entity.add_component(cat, Component.Health, 1)
-    Entity.add_component(cat, Component.Sound, "Meow")
-    Entity.add_component(cat, Component.Position, {1, 1})
-
-    Task.start_link(fn -> loop(%{entities: [dragon, cat]}) end)
+    Task.start_link(fn -> loop(%{entities: [dragon]}) end)
   end
 
   defp loop(state) do
