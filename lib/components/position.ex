@@ -17,4 +17,8 @@ defmodule Component.Position do
   def move_by(entity, dx, dy) do
     update(entity, fn %{x: x, y: y} -> %{x: x + dx, y: y + dy} end)
   end
+
+  def at?(entity, {x, y}) do
+    get(entity) == {x,y}
+  end
 end

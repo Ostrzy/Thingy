@@ -16,16 +16,17 @@ defmodule System.AI.Hunger.Executor do
     |> Enum.filter(&Component.AI.chosen?(&1, System.AI.Hunger))
     |> Enum.each(&execute(&1))
 
-    entities
+    Enum.filter entities, &Process.alive?/1
   end
 
   defp execute(entity) do
     alias Component.Position
-    targets = Component.AI.blackboard(entity, System.AI.Hunger).targets
+    targets = Component.AI.blackboard(entity, System.AI.Hunger).targets |> Enum.filter &Process.alive?/1
     if not Enum.empty? targets do
       targets
       |> Enum.min_by(fn target -> distance(Position.get(entity), Position.get(target)) end)
       |> go_to(entity)
+      |> eat(entity)
     end
   end
 
@@ -42,7 +43,7 @@ defmodule System.AI.Hunger.Executor do
     dy = abs ty - py
     d = dx + dy
     dirx = if dx != 0, do: (tx - px) / dx, else: 0
-    diry = if dx != 0, do: (ty - py) / dy, else: 0
+    diry = if dy != 0, do: (ty - py) / dy, else: 0
 
     if d <= range do
       Component.Position.move_to entity, tx, ty
@@ -54,6 +55,15 @@ defmodule System.AI.Hunger.Executor do
 
     {x1, y1} = Component.Position.get entity
     IO.puts(to_string(x1) <> " " <> to_string(y1))
+    target
+  end
+
+  defp eat(target, entity) do
+    alias Component.Position
+    if Position.at?(entity, Position.get target) do
+      Agent.stop target
+      IO.puts "Om nom nom"
+    end
   end
 
 end
