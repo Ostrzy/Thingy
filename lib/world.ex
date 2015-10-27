@@ -14,6 +14,8 @@ defmodule World do
     System.AI.Choice,
     # AI execution systems
     System.AI.Hunger.Executor,
+
+    System.Display,
   ]
 
   def start_link do
@@ -30,6 +32,7 @@ defmodule World do
     Entity.add_component(dragon, Component.AI.Hunger)
     Entity.add_component(dragon, Component.Position, {0, 0})
     Entity.add_component(dragon, Component.Movement, {5, :true})
+    Entity.add_component(dragon, Component.Display, :dragon)
 
     Task.start_link(fn -> loop(%{entities: [dragon]}) end)
   end

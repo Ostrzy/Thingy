@@ -27,6 +27,10 @@ defmodule Entity do
     end
   end
 
+  def components(entity) do
+    Agent.get(entity, fn components -> components end)
+  end
+
   def get_state(entity, component_name) do
     get_for_component(entity, component_name, :get_state)
   end

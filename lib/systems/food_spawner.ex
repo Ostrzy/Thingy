@@ -9,6 +9,7 @@ defmodule System.FoodSpawner do
     {:ok, food} = Entity.init
     Entity.add_component(food, Component.Position, {x, y})
     Entity.add_component(food, Component.Eatable, {:meat, v})
+    Entity.add_component(food, Component.Display, :meat_chunk)
 
     [food | entities]
   end
