@@ -61,8 +61,10 @@ defmodule System.AI.Hunger.Executor do
   defp eat(target, entity) do
     alias Component.Position
     if Position.at?(entity, Position.get target) do
+      {_, calories} = Component.Eatable.stats(target)
+      Component.Hunger.eat(entity, calories)
       Agent.stop target
-      IO.puts "Om nom nom"
+      IO.puts "Om nom nom: " <> to_string calories
     end
   end
 
