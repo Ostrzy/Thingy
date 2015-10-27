@@ -14,16 +14,19 @@ defmodule System.AI.Hunger.Executor do
     entities
     |> Entity.filter(@components)
     |> Enum.filter(&Component.AI.chosen?(&1, System.AI.Hunger))
-    |> Enum.each(&set_action(&1))
+    |> Enum.each(&execute(&1))
 
     entities
   end
 
-  defp set_action(entity) do
+  defp execute(entity) do
     alias Component.Position
-    Component.AI.blackboard(entity, System.AI.Hunger).targets
-    |> Enum.min_by(fn target -> distance(Position.get(entity), Position.get(target)) end)
-    |> go_to(entity)
+    targets = Component.AI.blackboard(entity, System.AI.Hunger).targets
+    if not Enum.empty? targets do
+      targets
+      |> Enum.min_by(fn target -> distance(Position.get(entity), Position.get(target)) end)
+      |> go_to(entity)
+    end
   end
 
   defp distance({x1, y1}, {x2, y2}) do
