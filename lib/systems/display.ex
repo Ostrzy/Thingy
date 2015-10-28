@@ -32,7 +32,7 @@ defmodule System.Display do
     json
   end
 
-  defp send_to_frontend(_json) do
-    # Do nothing for now
+  defp send_to_frontend(json) do
+    Server.Main.send(Server.Main, json)
   end
 end

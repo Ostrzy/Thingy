@@ -30,6 +30,9 @@ defmodule Thingy.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:json, "~> 0.3.0"}]
+    [
+      {:json, "~> 0.3.0"},
+      {:socket, "~> 0.3.1"},
+    ]
   end
 end
