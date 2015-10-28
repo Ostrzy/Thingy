@@ -1,0 +1,6 @@
+```
+elm-package install
+elm-reactor
+```
+
+Go to: [http://localhost:8000](http://localhost:8000)
