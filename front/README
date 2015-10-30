@@ -4,3 +4,16 @@ elm-reactor
 ```
 
 Go to: [http://localhost:8000](http://localhost:8000)
+
+
+I don't know a clean way to depend on a non-published package, so making it works required a few hacks:
+1. I copied the package by hand to elm-stuff/packages (non-related: I changed the constructor of SocketEvent from Message to Msg, otherwise it wouldn't compile)
+2. I specified the package by hand in both elm-stuff/exact-dependecies.json and elm-dependencies.json
+3. I specified not to gitignore that parts of elm-stuff
+
+Assuming you had elm-core already installed, and you don't need any new packages, it should work. But if you want to install or update any existing package, elm-package install will fail when trying to look for elm-websockets. As a workaround:
+-remove the dependency from elm-package.json
+-install what you need
+-run elm-reactor, see if the compilation fails due to websockets not installed
+-add the dependency back
+-run the program
