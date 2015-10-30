@@ -19,7 +19,7 @@ Elm.Native.WebSocket.make = function(localRuntime) {
                 // TODO: apparently this can be something other than a string
                 // https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent
                 Task.perform(address._0({
-                    ctor: "Message",
+                    ctor: "Msg",
                     _0: evt.data
                 }));
             });
