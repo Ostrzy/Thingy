@@ -1,6 +1,13 @@
 defmodule System.Display do
   @behaviour GameSystem
 
+  @filter_regexes [
+    ~r/^ai$/,
+    ~r/^ai_/,
+    ~r/^senses$/,
+    ~r/^sense_/,
+  ]
+
   def run(entities) do
     entities
     |> Entity.filter(Component.Display)
@@ -16,6 +23,7 @@ defmodule System.Display do
     |> Entity.components
     |> HashDict.to_list
     |> Enum.map(fn {id, component} -> {component_id(id), state(component)} end)
+    |> Enum.reject(fn {id, _} -> Enum.any?(@filter_regexes, &Regex.match?(&1, id)) end)
     |> Enum.reduce(HashDict.new, fn {id, component}, dict -> HashDict.put(dict, id, component) end)
   end
 
