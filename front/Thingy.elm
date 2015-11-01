@@ -1,21 +1,28 @@
 module Thingy where
 
 import Graphics.Element exposing (show)
-import Task exposing (Task, andThen)
-import String
-import Time
-import WebSocket
+import Task exposing (Task)
+import WebSocket exposing (WebSocket, SocketEvent)
 
+import Entity exposing (Entity, Entities)
+import Decode
 
---One day, there will be a server writing to me...
-socket : Task x WebSocket.WebSocket
-socket = WebSocket.create "ws://localhost:8001" received.address
-
-received : Signal.Mailbox WebSocket.SocketEvent
-received = Signal.mailbox <| WebSocket.Msg"No data"
+eventToResult : SocketEvent -> Result String String
+eventToResult event = case event of
+  WebSocket.Msg string -> Ok string
+  WebSocket.Close -> Err "Closed"
 
 -- set up the receiving of data
-port responses : Task x WebSocket.WebSocket
-port responses = socket
+port responses : Task x WebSocket
+port responses = WebSocket.create "ws://localhost:8001" received.address
 
-main = Signal.map show received.signal
+received : Signal.Mailbox SocketEvent
+received = Signal.mailbox <| WebSocket.Msg "No data"
+
+andThen2 : (a -> Result x b) -> (b -> Result x c) -> (a -> Result x c)
+andThen2 f g = f >> (\r -> r `Result.andThen` g)
+
+entities : Signal (Result String Entities)
+entities = Signal.map (eventToResult `andThen2` Decode.decodeResponse) received.signal
+
+main = Signal.map show entities
