@@ -30,7 +30,7 @@ defmodule World do
     Entity.add_component(dragon, Component.Sense.Eyesight, 4)
     Entity.add_component(dragon, Component.AI)
     Entity.add_component(dragon, Component.AI.Hunger)
-    Entity.add_component(dragon, Component.Position, {0, 0})
+    Entity.add_component(dragon, Component.Position, {5, 5})
     Entity.add_component(dragon, Component.Movement, {5, :true})
     Entity.add_component(dragon, Component.Display, :dragon)
 

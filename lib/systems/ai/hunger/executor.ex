@@ -1,5 +1,6 @@
 defmodule System.AI.Hunger.Executor do
-  # It's very rough prototype for now
+  alias Component.Position
+
   @behaviour GameSystem
 
   @components [
@@ -7,7 +8,7 @@ defmodule System.AI.Hunger.Executor do
     Component.AI.Hunger,
     Component.Hunger,
     Component.Position,
-    Component.Senses
+    Component.Senses,
   ]
 
   def run(entities) do
@@ -16,50 +17,58 @@ defmodule System.AI.Hunger.Executor do
     |> Enum.filter(&Component.AI.chosen?(&1, System.AI.Hunger))
     |> Enum.each(&execute(&1))
 
-    Enum.filter entities, &Process.alive?/1
+    Enum.filter(entities, &Process.alive?/1)
   end
 
   defp execute(entity) do
-    alias Component.Position
-    targets = Component.AI.blackboard(entity, System.AI.Hunger).targets |> Enum.filter &Process.alive?/1
-    if not Enum.empty? targets do
-      targets
-      |> Enum.min_by(fn target -> distance(Position.get(entity), Position.get(target)) end)
-      |> go_to(entity)
-      |> eat(entity)
+    state   = Component.AI.blackboard(entity, System.AI.Hunger)
+    food    = state.food |> Enum.filter(&Process.alive?/1)
+    targets = state.targets |> Enum.filter(&Process.alive?/1)
+    cond do
+      Enum.count(food) > 0 ->
+        eat_lying_food(entity, food)
+        IO.puts("Lying food eating!")
+      Enum.count(targets) > 0 && Entity.contains?(entity, Component.Fight) ->
+        kill_eatable_target(entity, targets)
+        IO.puts("Chasing food!")
+      true ->
+        look_for_food(entity)
+        IO.puts("Search for food")
+    end
+  end
+
+  defp closest_entity(entities, entity) do
+    Enum.min_by entities, fn target ->
+      %{d: dist} = distance(Position.get(entity), Position.get(target))
+      dist
     end
   end
 
   defp distance({x1, y1}, {x2, y2}) do
-    abs(x1 - x2) + abs(y1 - y2)
+    dx = x1 - x2
+    dy = y1 - y2
+    %{dx: dx, dy: dy, d: abs(dx) + abs(dy)}
+  end
+
+  def move_to(entity, {tx, ty}) do
+    %{dx: dx, dy: _dy, d: d} = distance(Position.get(entity), {tx, ty})
+    range = Component.Movement.get_range entity
+    if d <= range do
+      Position.move_to entity, tx, ty
+    else
+      mx = round(dx / d * range)
+      my = range - abs(mx)
+      Position.move_by entity, mx, my
+    end
   end
 
   defp go_to(target, entity) do
-    {px, py} = Component.Position.get(entity)
-    {tx, ty} = Component.Position.get(target)
-    range = Component.Movement.get_range entity
-
-    dx = abs tx - px
-    dy = abs ty - py
-    d = dx + dy
-    dirx = if dx != 0, do: (tx - px) / dx, else: 0
-    diry = if dy != 0, do: (ty - py) / dy, else: 0
-
-    if d <= range do
-      Component.Position.move_to entity, tx, ty
-    else
-      mx = round dx / d * range
-      my = range - mx
-      Component.Position.move_by entity, dirx * mx, diry * my
-    end
-
-    {x1, y1} = Component.Position.get entity
-    IO.puts(to_string(x1) <> " " <> to_string(y1))
+    move_to(entity, Position.get(target))
+    {x1, y1} = Position.get entity
     target
   end
 
   defp eat(target, entity) do
-    alias Component.Position
     if Position.at?(entity, Position.get target) do
       {_, calories} = Component.Eatable.stats(target)
       Component.Hunger.eat(entity, calories)
@@ -68,4 +77,37 @@ defmodule System.AI.Hunger.Executor do
     end
   end
 
+  def eat_lying_food(entity, food) do
+    food
+    |> closest_entity(entity)
+    |> go_to(entity)
+    |> eat(entity)
+  end
+
+  defp kill(target, entity) do
+    tpos = Position.get(target)
+    epos = Position.get(entity)
+    range = Component.Fight.get_range(entity)
+    %{d: dist} = distance(tpos, epos)
+    if dist <= range do
+      damage = Component.Fight.get_damage(entity)
+      Component.Health.damage(target, damage)
+    end
+  end
+
+  def kill_eatable_target(entity, targets) do
+    targets
+    |> closest_entity(entity)
+    |> go_to(entity)
+    |> kill(entity)
+  end
+
+  def look_for_food(entity) do
+    range = Component.Movement.get_range(entity)
+    dx = :random.uniform(range + 1) - 1
+    dy = range - dx
+    dx = dx * Enum.random([-1, 1])
+    dy = dy * Enum.random([-1, 1])
+    Position.move_by(entity, dx, dy)
+  end
 end

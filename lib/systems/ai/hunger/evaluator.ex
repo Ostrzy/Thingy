@@ -32,10 +32,12 @@ defmodule System.AI.Hunger.Evaluator do
   end
 
   defp analyze_environment(entity) do
-    # Filter things that can be eaten after killed
-    targets = Component.Senses.get(entity) |> Enum.filter(fn e -> e != entity end)
-    # Fetch directly eatable entities
-    state = %{targets: targets, food: []}
+    entities = Component.Senses.get(entity) |> Enum.filter(fn e -> e != entity end)
+    # Things that can be eaten after killed
+    targets = entities |> Entity.filter(Component.Health)
+    # Directly eatable entities
+    food = entities |> Entity.filter(Component.Eatable)
+    state = %{targets: targets, food: food}
     Component.AI.set_blackboard(entity, System.AI.Hunger, state)
     state
   end
