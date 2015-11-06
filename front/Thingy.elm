@@ -1,10 +1,11 @@
 module Thingy where
 
+import Graphics.Element exposing (Element)
 import Graphics.Element exposing (show)
 import Task exposing (Task)
 import WebSocket exposing (WebSocket, SocketEvent)
 
-import Entity exposing (Entity, Entities)
+import Entity exposing (Entity, Entities, view)
 import Decode
 
 eventToResult : SocketEvent -> Result String String
@@ -25,4 +26,9 @@ andThen2 f g = f >> (\r -> r `Result.andThen` g)
 entities : Signal (Result String Entities)
 entities = Signal.map (eventToResult `andThen2` Decode.decodeResponse) received.signal
 
-main = Signal.map show entities
+displayEntities : (Result String Entities) -> Element
+displayEntities entities = case entities of
+  Ok es     -> Entity.view es
+  Err error -> show error
+
+main = Signal.map displayEntities entities
