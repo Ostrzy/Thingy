@@ -2,15 +2,15 @@ defmodule System.FoodSpawner do
   @behaviour GameSystem
 
   def run(entities) do
-    x = :random.uniform(11) - 1
-    y = :random.uniform(11) - 1
-    v = :random.uniform(20)
+    if :random.uniform > 0.8 do
+      entities
+    else
+      generate_food ++ entities
+    end
+  end
 
-    {:ok, food} = Entity.init
-    Entity.add_component(food, Component.Position, {x, y})
-    Entity.add_component(food, Component.Eatable, {:meat, v})
-    Entity.add_component(food, Component.Display, :meat_chunk)
-
-    [food | entities]
+  defp generate_food do
+    n = :random.uniform(5)
+    Enum.map(1..n, fn _ -> Assemblage.MeatChunk.new end)
   end
 end

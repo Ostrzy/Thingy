@@ -4,7 +4,7 @@ defmodule System.Sense.Eyesight do
   @required_components [Component.Senses, Component.Position, Component.Sense.Eyesight]
 
   def run(entities) do
-    findable_entities = Enum.filter(entities, &Entity.contains?(&1, Component.Position))
+    findable_entities = Entity.filter(entities, Component.Position)
 
     entities
     |> Enum.filter(&Entity.contains?(&1, @required_components))

@@ -22,7 +22,9 @@ defmodule System.AI.Hunger.Executor do
 
   defp execute(entity) do
     state   = Component.AI.blackboard(entity, System.AI.Hunger)
+    IO.puts "I can see: #{Enum.count(state.food)} food"
     food    = state.food |> Enum.filter(&Process.alive?/1)
+    IO.puts "I can see: #{Enum.count(food)} present food"
     targets = state.targets |> Enum.filter(&Process.alive?/1)
     cond do
       Enum.count(food) > 0 ->
@@ -51,20 +53,25 @@ defmodule System.AI.Hunger.Executor do
   end
 
   def move_to(entity, {tx, ty}) do
-    %{dx: dx, dy: _dy, d: d} = distance(Position.get(entity), {tx, ty})
+    %{dx: dx, dy: dy, d: d} = distance(Position.get(entity), {tx, ty})
     range = Component.Movement.get_range entity
     if d <= range do
       Position.move_to entity, tx, ty
     else
       mx = round(dx / d * range)
-      my = range - abs(mx)
-      Position.move_by entity, mx, my
+      y_sign = if dy < 0 do -1 else 1 end
+      my = (range - abs(mx)) * y_sign
+      Position.move_by entity, -mx, -my
     end
   end
 
   defp go_to(target, entity) do
+    {x, y}   = Position.get entity
+    {tx, ty} = Position.get target
+    IO.puts "I am at (#{x}, #{y}) and I go to (#{tx}, #{ty})"
     move_to(entity, Position.get(target))
-    {x1, y1} = Position.get entity
+    {x, y} = Position.get entity
+    IO.puts "Now I am at: (#{x}, #{y})"
     target
   end
 
