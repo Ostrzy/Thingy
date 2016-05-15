@@ -2,3 +2,7 @@
 /deps
 erl_crash.dump
 *.ez
+
+front/elm-stuff
+front/elm.js
+front/index.html

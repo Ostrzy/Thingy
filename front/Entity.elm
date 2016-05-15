@@ -1,7 +1,7 @@
-module Entity where
+module Entity exposing (Entities, Entity, view)
 
-import Graphics.Element exposing (Element)
-import Graphics.Collage exposing (Form, square, filled, move, collage)
+import Element exposing (Element)
+import Collage exposing (Form, square, filled, move, collage)
 import Color exposing (Color, rgb)
 
 type alias Entities = List Entity

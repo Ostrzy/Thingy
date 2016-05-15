@@ -1,4 +1,4 @@
-module Decode where
+module Decode exposing (decodeResponse)
 
 import Json.Decode as Decode exposing (Decoder, (:=))
 

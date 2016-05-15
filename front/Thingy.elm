@@ -1,34 +1,43 @@
-module Thingy where
+module Thingy exposing (main)
 
-import Graphics.Element exposing (Element)
-import Graphics.Element exposing (show)
-import Task exposing (Task)
-import WebSocket exposing (WebSocket, SocketEvent)
+import Element exposing (Element)
+import WebSocket
 
 import Entity exposing (Entity, Entities, view)
-import Decode
+import Decode exposing (decodeResponse)
 
-eventToResult : SocketEvent -> Result String String
-eventToResult event = case event of
-  WebSocket.Msg string -> Ok string
-  WebSocket.Close -> Err "Closed"
+import Html exposing (Html)
+import Html.App as Html
 
--- set up the receiving of data
-port responses : Task x WebSocket
-port responses = WebSocket.create "ws://localhost:8001" received.address
+type alias Model = Entities
 
-received : Signal.Mailbox SocketEvent
-received = Signal.mailbox <| WebSocket.Msg "No data"
+type Msg
+  = RefreshData Entities
 
-andThen2 : (a -> Result x b) -> (b -> Result x c) -> (a -> Result x c)
-andThen2 f g = f >> (\r -> r `Result.andThen` g)
+main = Html.program { init = init, update = update, subscriptions = subscriptions, view = view }
 
-entities : Signal (Result String Entities)
-entities = Signal.map (eventToResult `andThen2` Decode.decodeResponse) received.signal
+init : (Model, Cmd Msg)
+init = ([], Cmd.none)
 
-displayEntities : (Result String Entities) -> Element
-displayEntities entities = case entities of
-  Ok es     -> Entity.view es
-  Err error -> show error
+update : Msg -> Model -> (Model, Cmd Msg)
+update message _ =
+  case message of
+    RefreshData entities ->
+      (entities, Cmd.none)
 
-main = Signal.map displayEntities entities
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+  WebSocket.listen "ws://localhost:8001" <| RefreshData << extractEntities
+
+view : Model -> Html Msg
+view model = Element.toHtml <| Entity.view model
+
+
+extractEntities : String -> Entities
+extractEntities json =
+  case decodeResponse json of
+    Ok entities ->
+      entities
+
+    Err _ ->
+      []

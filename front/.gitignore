@@ -1,6 +1,0 @@
-elm-stuff/*
-!elm-stuff/packages/
-elm-stuff/packages/*
-!elm-stuff/packages/vilterp
-!elm-stuff/exact-dependencies.json
-elm.js
